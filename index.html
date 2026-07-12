@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>하이러닝 SDGs 챌린지 - 착한 기술을 찾아라!</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@500;700&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <style>
+        /* 1. SETUP & RESET */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background-color: #f7f9fc;
+            font-family: 'Noto Sans KR', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            padding: 30px 20px;
+        }
+
+        h1 {
+            font-family: 'Comfortaa', 'Noto Sans KR', sans-serif;
+            color: #2c3e50;
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 18px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        /* 2. GAME AREA CONTAINER */
+        .game-container {
+            width: 100%;
+            max-width: 1200px;
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+        }
+
+        /* 3. CARD DECK ZONE */
+        .cards-deck {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            background-color: #ffffff;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            border: 2px dashed #cbd5e1;
+        }
+
+        /* CARD STYLING */
+        .tech-card {
+            background-color: #f8fafc;
+            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 15px;
+            cursor: grab;
+            transition: all 0.25s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+
+        .tech-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+            border-color: #94a3b8;
+        }
+
+        .card-img-wrapper {
+            width: 100%;
+            height: 160px;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid #e2e8f0;
+            margin-bottom: 12px;
+        }
+
+        .card-img-wrapper img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 8px;
+        }
+
+        .card-desc {
+            font-size: 13px;
+            color: #64748b;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* 4. DROP TARGET ZONES */
+        .drop-zones-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        .drop-zone {
+            background-color: #ffffff;
+            border-radius: 24px;
+            padding: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.04);
+            min-height: 350px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 3px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .drop-zone.high-tech {
+            background-color: #eff6ff;
+            border-color: #bfdbfe;
+        }
+
+        .drop-zone.high-tech.hovered {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+        }
+
+        .drop-zone.appropriate-tech {
+            background-color: #ecfdf5;
+            border-color: #a7f3d0;
+        }
+
+        .drop-zone.appropriate-tech.hovered {
+            background-color: #d1fae5;
+            border-color: #10b981;
+        }
+
+        .zone-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .high-tech .zone-title {
+            color: #1d4ed8;
+        }
+
+        .appropriate-tech .zone-title {
+            color: #047857;
+        }
+
+        .zone-cards-area {
+            width: 100%;
+            flex-grow: 1;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            align-content: start;
+        }
+
+        /* 5. INTERACTIVE BUTTON AREA */
+        .control-area {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 14px 35px;
+            font-size: 18px;
+            font-weight: 700;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.2s ease;
+        }
+
+        .btn-check {
+            background-color: #e07a5f;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background-color: #c9654b;
+            transform: scale(1.03);
+        }
+
+        .btn-reset {
+            background-color: #64748b;
+            color: white;
+        }
+
+        .btn-reset:hover {
+            background-color: #475569;
+            transform: scale(1.03);
+        }
+
+        /* FEEDBACK BADGES */
+        .feedback-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            font-weight: 900;
+            display: none;
+        }
+        .correct {
+            color: #10b981;
+        }
+        .incorrect {
+            color: #ef4444;
+        }
+
+        /* MODAL ALERT */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: 20px;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 90%;
+        }
+
+        .modal-content h2 {
+            font-size: 28px;
+            color: #2c3e50;
+            margin-bottom: 15px;
+        }
+
+        .modal-content p {
+            font-size: 18px;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        .btn-modal-close {
+            background-color: #10b981;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>SDGs 요원 분류 챌린지 🕵️‍♂️</h1>
+    <div class="subtitle">지구촌 오지의 주민들을 돕는 '착한 기술(적정기술)' 카드와 일반 '첨단 기술' 카드를 알맞은 상자에 분류해 보세요!</div>
+
+    <div class="game-container">
+        
+        <!-- CARDS INITIALLY IN DECK -->
+        <div class="cards-deck" id="cards-deck">
+            
+            <!-- CARD 1: SMARTPHONE -->
+            <div class="tech-card" id="card-smartphone" draggable="true" data-tech="high">
+                <span class="feedback-badge"><i class="fa-solid"></i></span>
+                <div class="card-img-wrapper">
+                    <img src="http://googleusercontent.com/image_collection/image_retrieval/11382599064184222889_0" alt="최신형 스마트폰">
+                </div>
+                <div class="card-title">📱 최신 스마트폰</div>
+                <div class="card-desc">실시간 통신과 고화질 촬영이 가능하지만, 매일 전기를 사용해 충전해야 합니다.</div>
+            </div>
+
+            <!-- CARD 2: LIFESTRAW -->
+            <div class="tech-card" id="card-lifestraw" draggable="true" data-tech="app">
+                <span class="feedback-badge"><i class="fa-solid"></i></span>
+                <div class="card-img-wrapper">
+                    <img src="http://googleusercontent.com/image_collection/image_retrieval/11851323756813843829_0" alt="라이프 스트로우">
+                </div>
+                <div class="card-title">🥤 라이프 스트로우</div>
+                <div class="card-desc">구정물에 빨대처럼 꽂아 마시기만 해도 세균과 병원균을 99.9% 안전하게 제거합니다.</div>
+            </div>
+
+            <!-- CARD 3: DRONE -->
+            <div class="tech-card" id="card-drone" draggable="true" data-tech="high">
+                <span class="feedback-badge"><i class="fa-solid"></i></span>
+                <div class="card-img-wrapper">
+                    <img src="http://googleusercontent.com/image_collection/image_retrieval/9943201759435834780_0" alt="쿼드콥터 드론">
+                </div>
+                <div class="card-title">🛸 항공 촬영용 드론</div>
+                <div class="card-desc">하늘을 날며 모니터링을 도와주지만 고성능 배터리 및 값비싼 전용 부품들이 수리에 필요합니다.</div>
+            </div>
+
+            <!-- CARD 4: Q-DRUM -->
+            <div class="tech-card" id="card-qdrum" draggable="true" data-tech="app">
+                <span class="feedback-badge"><i class="fa-solid"></i></span>
+                <div class="card-img-wrapper">
+                    <img src="http://googleusercontent.com/image_collection/image_retrieval/17469403388981346124_0" alt="큐드럼">
+                </div>
+                <div class="card-title">🍩 도넛 모양 큐드럼</div>
+                <div class="card-desc">어린아이들도 물을 가득 담은 큰 통(50L)을 바닥에 힘들이지 않고 데굴데굴 굴릴 수 있는 물통입니다.</div>
+            </div>
+
+            <!-- CARD 5: WASHING MACHINE -->
+            <div class="tech-card" id="card-wash" draggable="true" data-tech="high">
+                <span class="feedback-badge"><i class="fa-solid"></i></span>
+                <div class="card-img-wrapper">
+                    <img src="http://googleusercontent.com/image_collection/image_retrieval/13445108277456818415_0" alt="드럼 세탁기">
+                </div>
+                <div class="card-title">🧺 최신 드럼 세탁기</div>
+                <div class="card-desc">의류를 완벽히 세탁하고 건조하지만, 높은 전력 소모와 상하수도관 직수 연결이 필수입니다.</div>
+            </div>
+
+            <!-- CARD 6: FOG CATCHER -->
+            <div class="tech-card" id="card-fog" draggable="true" data-tech="app">
+                <span class="feedback-badge"><i class="fa-solid"></i></span>
+                <div class="card-img-wrapper">
+                    <img src="http://googleusercontent.com/image_collection/image_retrieval/17633018127457571703_0" alt="안개 포획 그물망">
+                </div>
+                <div class="card-title">🕸️ 안개 포획 그물</div>
+                <div class="card-desc">비가 안 내리는 건조한 산악지대에서 그물망에 걸리는 이슬과 안개를 식수로 직접 포집하는 장치입니다.</div>
+            </div>
+
+        </div>
+
+        <!-- TWO DROP ZONE BOXES -->
+        <div class="drop-zones-container">
+            
+            <!-- HIGH TECH ZONE -->
+            <div class="drop-zone high-tech" id="zone-high" data-expected="high">
+                <div class="zone-title"><i class="fa-solid fa-microchip"></i> 첨단 / 일반 기술 상자</div>
+                <div class="zone-cards-area" id="area-high"></div>
+            </div>
+
+            <!-- APPROPRIATE TECH ZONE -->
+            <div class="drop-zone appropriate-tech" id="zone-app" data-expected="app">
+                <div class="zone-title"><i class="fa-solid fa-hands-holding-child"></i> 적정 기술 (착한 기술) 상자</div>
+                <div class="zone-cards-area" id="area-app"></div>
+            </div>
+
+        </div>
+
+        <!-- CONTROL BUTTONS -->
+        <div class="control-area">
+            <button class="btn btn-check" onclick="checkAnswers()"><i class="fa-solid fa-circle-check"></i> 채점하기</button>
+            <button class="btn btn-reset" onclick="resetGame()"><i class="fa-solid fa-rotate-left"></i> 처음부터 다시</button>
+        </div>
+
+    </div>
+
+    <!-- SUCCESS MODAL ALERT -->
+    <div class="modal" id="success-modal">
+        <div class="modal-content">
+            <h2>🎉 퀘스트 통과!</h2>
+            <p>모든 카드를 오염된 마을 주민을 위한 적정기술과 첨단기술로 완벽하게 분류했습니다! 멋져요 SDGs 비밀요원!</p>
+            <button class="btn btn-modal-close" onclick="closeModal()">확인</button>
+        </div>
+    </div>
+
+    <script>
+        const cards = document.querySelectorAll('.tech-card');
+        const dropAreas = document.querySelectorAll('.zone-cards-area');
+        const defaultDeck = document.getElementById('cards-deck');
+
+        // Drag and Drop Logic
+        cards.forEach(card => {
+            card.addEventListener('dragstart', (e) => {
+                e.dataTransfer.setData('text/plain', card.id);
+                setTimeout(() => {
+                    card.style.opacity = '0.5';
+                }, 0);
+            });
+
+            card.addEventListener('dragend', () => {
+                card.style.opacity = '1';
+            });
+        });
+
+        const zones = document.querySelectorAll('.drop-zone');
+        zones.forEach(zone => {
+            const area = zone.querySelector('.zone-cards-area');
+            
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('hovered');
+            });
+
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('hovered');
+            });
+
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('hovered');
+                const cardId = e.dataTransfer.getData('text/plain');
+                const card = document.getElementById(cardId);
+                if (card) {
+                    area.appendChild(card);
+                    // Hide any active feedback status on moving
+                    const badge = card.querySelector('.feedback-badge');
+                    badge.style.display = 'none';
+                }
+            });
+        });
+
+        // Check if cards are categorized correctly
+        function checkAnswers() {
+            let allCorrect = true;
+            let unclassified = false;
+
+            // Check deck - if cards are still in the deck, they aren't classified
+            if (defaultDeck.children.length > 0) {
+                unclassified = true;
+            }
+
+            cards.forEach(card => {
+                const parentArea = card.parentElement;
+                const badge = card.querySelector('.feedback-badge');
+                const badgeIcon = badge.querySelector('i');
+
+                if (parentArea.id === 'cards-deck') {
+                    // Not placed yet
+                    badge.style.display = 'none';
+                    allCorrect = false;
+                    return;
+                }
+
+                const placedZoneType = parentArea.id === 'area-high' ? 'high' : 'app';
+                const cardCorrectType = card.dataset.tech;
+
+                badge.style.display = 'block';
+                if (placedZoneType === cardCorrectType) {
+                    badge.className = 'feedback-badge correct';
+                    badgeIcon.className = 'fa-solid fa-circle-check';
+                } else {
+                    badge.className = 'feedback-badge incorrect';
+                    badgeIcon.className = 'fa-solid fa-circle-xmark';
+                    allCorrect = false;
+                }
+            });
+
+            if (unclassified) {
+                alert('모든 카드를 분류함에 넣어주세요!');
+            } else if (allCorrect) {
+                document.getElementById('success-modal').style.display = 'flex';
+            } else {
+                alert('잘못 분류된 카드가 있어요! X 표시된 카드를 올바른 위치로 옮겨보세요.');
+            }
+        }
+
+        // Reset game to original state
+        function resetGame() {
+            cards.forEach(card => {
+                defaultDeck.appendChild(card);
+                const badge = card.querySelector('.feedback-badge');
+                badge.style.display = 'none';
+            });
+        }
+
+        function closeModal() {
+            document.getElementById('success-modal').style.display = 'none';
+            resetGame();
+        }
+    </script>
+</body>
+</html>
